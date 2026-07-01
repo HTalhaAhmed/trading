@@ -15,7 +15,7 @@ def load_ohlcv_csv(path: str | Path) -> pd.DataFrame:
         raise ValueError(f"CSV missing required columns: {sorted(missing)}")
 
     df["timestamp"] = pd.to_datetime(df["timestamp"], utc=True)
-    df = df.sort_values("timestamp").drop_duplicates(subset=["timestamp"]) 
+    df = df.sort_values("timestamp").drop_duplicates(subset=["timestamp"])
     df = df.set_index("timestamp")
     numeric_cols = ["open", "high", "low", "close", "volume"]
     if "spread" in df.columns:
