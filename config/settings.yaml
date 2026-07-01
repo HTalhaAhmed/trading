@@ -44,3 +44,45 @@ news:
   blackout_pre_minutes: 15
   blackout_post_minutes: 15
   impacts: [high]
+
+# ------------------------------------------------------------------
+# Broker / execution settings  (live and paper modes)
+# ------------------------------------------------------------------
+broker:
+  # Execution mode: backtest | paper | mt5
+  #   backtest  - event-driven CSV replay (default, no broker needed)
+  #   paper     - bar-by-bar CSV replay through a simulated broker
+  #   mt5       - connect to MetaTrader 5 terminal (demo or live)
+  mode: backtest
+
+  # Symbol name as it appears in your MT5 broker's Market Watch.
+  # Some brokers append a suffix, e.g. XAUUSDm — check your terminal.
+  mt5_symbol: XAUUSD
+
+  # How often to poll MT5 for a new closed bar (seconds, mt5 mode only).
+  polling_interval_seconds: 60
+
+  # Unique magic number written to every order so you can identify
+  # bot trades in the MT5 terminal history.
+  magic_number: 234000
+
+  # Maximum allowed order deviation in points (MT5 slippage guard).
+  deviation: 10
+
+  # Kill-switch: skip trading if the current spread exceeds this value
+  # (price points, e.g. USD for XAUUSD).  3.0 is a conservative limit.
+  max_spread_points: 3.0
+
+  # SAFETY LOCK — keep false until you have tested extensively on DEMO.
+  # Can also be overridden at runtime via the TRADE_ENABLED env var.
+  trade_enabled: false
+
+  # MT5 connection credentials.
+  # ⚠️  Do NOT commit real credentials to version control.
+  # Provide via environment variables instead:
+  #   MT5_LOGIN=<number>  MT5_PASSWORD=<password>  MT5_SERVER=<server>
+  # The values below are documentation placeholders only.
+  mt5:
+    login: 0        # set via MT5_LOGIN env var
+    password: ""    # set via MT5_PASSWORD env var
+    server: ""      # set via MT5_SERVER env var
