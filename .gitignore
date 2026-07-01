@@ -1,0 +1,25 @@
+__pycache__/
+*.py[cod]
+*.so
+*.egg-info/
+.eggs/
+.pytest_cache/
+.mypy_cache/
+.venv/
+venv/
+env/
+.coverage
+htmlcov/
+.DS_Store
+.idea/
+.vscode/
+logs/
+*.log
+output/
+exports/
+*.sqlite3
+
+# data artifacts
+/data/raw/
+/data/processed/
+/data/tmp/
