@@ -1,0 +1,7 @@
+events:
+  - timestamp: "2025-01-02T13:30:00Z"
+    impact: high
+    title: US NFP (sample)
+  - timestamp: "2025-01-03T15:00:00Z"
+    impact: medium
+    title: ISM PMI (sample)
