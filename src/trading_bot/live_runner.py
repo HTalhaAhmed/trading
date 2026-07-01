@@ -173,6 +173,20 @@ class LiveRunner:
 
         # --- Stale-data guard (live mode only) ------------------------
         if check_staleness:
+            now_utc = pd.Timestamp.utcnow().tz_localize("UTC")
+            bar_age_minutes = (now_utc - latest_ts).total_seconds() / 60.0
+            # Warn if the newest bar is much older than expected.
+            # A feed that hasn't updated in > 5× the polling interval is
+            # likely stalled or disconnected.
+            max_age_minutes = (self._poll_interval * 5) / 60.0
+            if bar_age_minutes > max_age_minutes:
+                logger.warning(
+                    "KILL-SWITCH: Latest bar is %.1f minutes old (threshold=%.1f min). "
+                    "Data feed may be stalled — skipping.",
+                    bar_age_minutes,
+                    max_age_minutes,
+                )
+                return
             if self._last_bar_ts is not None and latest_ts <= self._last_bar_ts:
                 logger.debug("No new bar yet (last=%s) — waiting.", self._last_bar_ts)
                 return
