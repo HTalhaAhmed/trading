@@ -14,12 +14,10 @@ class SignalQualityTests(unittest.TestCase):
             atr_normalized=1.1,
             spread_points=20,
             room_to_target_atr=1.5,
-            trigger_candle_atr_ratio=1.0,
+            trigger_candle_atr_ratio=2.0,
         )
         quality_cfg = QualityConfig(only_a_plus=True, min_score=0.4, live_min_score=0.4)
-        weights = WeightConfig(htf_alignment=0.3, session=0.3, volatility=0.2, spread=0.2, room_to_target=0.0, trigger_size=0.0)
-
-        result = assess_signal(ctx, quality_cfg, FilterConfig(), weights, mode="backtest")
+        result = assess_signal(ctx, quality_cfg, FilterConfig(), WeightConfig(), mode="backtest")
 
         self.assertFalse(result.allowed)
         self.assertIn("not_a_plus", result.blocked_reasons)
