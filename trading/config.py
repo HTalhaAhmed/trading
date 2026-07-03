@@ -13,6 +13,13 @@ class ModeConfig:
 
 
 @dataclass
+class MT5Config:
+    login: int | None = None
+    password: str | None = None
+    server: str | None = None
+
+
+@dataclass
 class QualityConfig:
     only_a_plus: bool = False
     min_score: float = 0.6
@@ -55,6 +62,7 @@ class GateConfig:
 @dataclass
 class TradingConfig:
     mode: ModeConfig = field(default_factory=ModeConfig)
+    mt5: MT5Config = field(default_factory=MT5Config)
     quality: QualityConfig = field(default_factory=QualityConfig)
     filters: FilterConfig = field(default_factory=FilterConfig)
     weights: WeightConfig = field(default_factory=WeightConfig)
@@ -67,6 +75,7 @@ class TradingConfig:
         data = json.loads(Path(path).read_text())
         return cls(
             mode=ModeConfig(**data.get("mode", {})),
+            mt5=MT5Config(**data.get("mt5", {})),
             quality=QualityConfig(**data.get("quality", {})),
             filters=FilterConfig(**data.get("filters", {})),
             weights=WeightConfig(**data.get("weights", {})),

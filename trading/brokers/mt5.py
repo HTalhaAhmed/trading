@@ -32,6 +32,7 @@ class MT5Broker(Broker):
             "password": self._password,
             "server": self._server,
         }
+        kwargs = {k: v for k, v in kwargs.items() if v is not None}
         ok = self._mt5.initialize(**kwargs)
         if not ok:
             raise RuntimeError(f"MT5 initialize failed: {self._mt5.last_error()}")

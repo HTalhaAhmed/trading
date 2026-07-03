@@ -24,6 +24,8 @@ def assess_signal(
     blocked: list[str] = []
     weighted_score = 0.0
     max_score = sum(vars(weights).values())
+    if max_score <= 0:
+        raise ValueError("Signal quality weights must sum to a positive value.")
 
     checks = {
         "htf_alignment": ctx.direction == ctx.htf_direction,

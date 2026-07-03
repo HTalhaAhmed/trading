@@ -20,6 +20,7 @@ class SignalQualityTests(unittest.TestCase):
         result = assess_signal(ctx, quality_cfg, FilterConfig(), WeightConfig(), mode="backtest")
 
         self.assertFalse(result.allowed)
+        self.assertIn("trigger_size", result.blocked_reasons)
         self.assertIn("not_a_plus", result.blocked_reasons)
 
     def test_filter_blocks_high_spread(self):
@@ -35,6 +36,21 @@ class SignalQualityTests(unittest.TestCase):
         result = assess_signal(ctx, QualityConfig(), FilterConfig(), WeightConfig(), mode="backtest")
         self.assertFalse(result.allowed)
         self.assertIn("spread", result.blocked_reasons)
+
+    def test_recent_loss_limit_blocks_above_threshold(self):
+        ctx = SignalContext(
+            direction="buy",
+            htf_direction="buy",
+            session="london",
+            atr_normalized=1.1,
+            spread_points=20,
+            room_to_target_atr=1.5,
+            trigger_candle_atr_ratio=1.0,
+            recent_losses=2,
+        )
+        result = assess_signal(ctx, QualityConfig(), FilterConfig(max_recent_losses=1), WeightConfig(), mode="backtest")
+        self.assertFalse(result.allowed)
+        self.assertIn("recent_loss_cooldown", result.blocked_reasons)
 
 
 if __name__ == "__main__":

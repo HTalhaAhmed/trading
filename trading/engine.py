@@ -47,7 +47,12 @@ class TradeEngine:
         if mode == "paper":
             return PaperBroker().submit_order(order)
         if mode == "mt5":
-            broker = MT5Broker()
+            kwargs = {
+                "login": self.config.mt5.login,
+                "password": self.config.mt5.password,
+                "server": self.config.mt5.server,
+            }
+            broker = MT5Broker(**kwargs)
             broker.connect()
             try:
                 return broker.submit_order(order)
