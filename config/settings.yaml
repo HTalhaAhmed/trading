@@ -1,0 +1,108 @@
+project:
+  symbol: XAUUSD
+  starting_equity: 10000
+  timezone: UTC
+
+data:
+  timeframe: 1min
+  required_columns: [timestamp, open, high, low, close, volume]
+
+execution:
+  spread_points: 0.25
+  slippage_points: 0.10
+
+sessions:
+  trade_hours_utc: [7, 16]  # inclusive start, exclusive end
+
+risk:
+  risk_per_trade: 0.005
+  daily_max_loss_pct: 0.03
+  max_consecutive_losses: 3
+  max_open_positions: 1
+  contract_value_per_point: 1.0
+
+regime:
+  trend_adx_threshold: 22
+  range_adx_threshold: 18
+  high_vol_atr_threshold: 1.8
+
+strategy:
+  trend:
+    ema_fast: 20
+    ema_slow: 50
+    pullback_ema: 20
+    stop_atr_mult: 1.5
+    take_profit_r: 1.5
+  range:
+    rsi_overbought: 70
+    rsi_oversold: 30
+    stop_atr_mult: 1.2
+    take_profit_r: 1.2
+
+news:
+  enabled: true
+  blackout_pre_minutes: 15
+  blackout_post_minutes: 15
+  impacts: [high]
+
+# ------------------------------------------------------------------
+# Broker / execution settings  (live and paper modes)
+# ------------------------------------------------------------------
+broker:
+  # Execution mode: backtest | paper | mt5
+  #   backtest  - event-driven CSV replay (default, no broker needed)
+  #   paper     - bar-by-bar CSV replay through a simulated broker
+  #   mt5       - connect to MetaTrader 5 terminal (demo or live)
+  mode: backtest
+
+  # Symbol name as it appears in your MT5 broker's Market Watch.
+  # Some brokers append a suffix, e.g. XAUUSDm — check your terminal.
+  mt5_symbol: XAUUSD
+
+  # How often to poll MT5 for a new closed bar (seconds, mt5 mode only).
+  polling_interval_seconds: 60
+
+  # Unique magic number written to every order so you can identify
+  # bot trades in the MT5 terminal history.
+  magic_number: 234000
+
+  # Maximum allowed order deviation in points (MT5 slippage guard).
+  deviation: 10
+
+  # Kill-switch: skip trading if the current spread exceeds this value
+  # (price points, e.g. USD for XAUUSD).  3.0 is a conservative limit.
+  max_spread_points: 3.0
+
+  # SAFETY LOCK — keep false until you have tested extensively on DEMO.
+  # Can also be overridden at runtime via the TRADE_ENABLED env var.
+  trade_enabled: false
+
+  # MT5 connection credentials.
+  # ⚠️  Do NOT commit real credentials to version control.
+  # Provide via environment variables instead:
+  #   MT5_LOGIN=<number>  MT5_PASSWORD=<password>  MT5_SERVER=<server>
+  # The values below are documentation placeholders only.
+  mt5:
+    login: 0        # set via MT5_LOGIN env var
+    password: ""    # set via MT5_PASSWORD env var
+    server: ""      # set via MT5_SERVER env var
+
+# ------------------------------------------------------------------
+# Trade scanner / setup grader
+# ------------------------------------------------------------------
+scanner:
+  # Set to true to suppress all setups below A+ grade.
+  # Lower-grade setups are still evaluated and logged.
+  only_a_plus: false
+
+  # Minimum normalised score to surface a trade (0.0 – 1.0).
+  # A+ requires >= 0.88; this is an additional hard floor.
+  min_score: 0.60
+
+  # Higher-timeframe trend source.
+  # "ema"   – derive from EMA-20 vs EMA-50 on the input data
+  # "none"  – assume neutral (conservative default)
+  htf_trend_source: ema
+
+  # Post-news stabilisation period (minutes) before trades are allowed.
+  post_news_stabilisation_minutes: 15
