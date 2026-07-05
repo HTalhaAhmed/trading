@@ -86,3 +86,23 @@ broker:
     login: 0        # set via MT5_LOGIN env var
     password: ""    # set via MT5_PASSWORD env var
     server: ""      # set via MT5_SERVER env var
+
+# ------------------------------------------------------------------
+# Trade scanner / setup grader
+# ------------------------------------------------------------------
+scanner:
+  # Set to true to suppress all setups below A+ grade.
+  # Lower-grade setups are still evaluated and logged.
+  only_a_plus: false
+
+  # Minimum normalised score to surface a trade (0.0 – 1.0).
+  # A+ requires >= 0.88; this is an additional hard floor.
+  min_score: 0.60
+
+  # Higher-timeframe trend source.
+  # "ema"   – derive from EMA-20 vs EMA-50 on the input data
+  # "none"  – assume neutral (conservative default)
+  htf_trend_source: ema
+
+  # Post-news stabilisation period (minutes) before trades are allowed.
+  post_news_stabilisation_minutes: 15
