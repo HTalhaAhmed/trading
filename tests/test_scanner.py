@@ -26,6 +26,25 @@ class TestSetupCandidate:
         assert c.direction == "LONG"
         assert c.rr == 2.0
 
+    def test_notes_field(self):
+        c = SetupCandidate(direction="NO TRADE", notes=["Insufficient data"])
+        assert c.notes == ["Insufficient data"]
+
+    def test_notes_default_empty(self):
+        c = SetupCandidate(direction="LONG")
+        assert c.notes == []
+
+    def test_signal_bar_field(self):
+        import pandas as pd
+        from datetime import datetime, timezone
+        ts = pd.Timestamp("2025-01-15 14:00:00", tz="UTC")
+        c = SetupCandidate(direction="LONG", signal_bar=ts)
+        assert c.signal_bar == ts
+
+    def test_signal_bar_defaults_none(self):
+        c = SetupCandidate(direction="SHORT")
+        assert c.signal_bar is None
+
 
 # ---------------------------------------------------------------------------
 # Session label helper

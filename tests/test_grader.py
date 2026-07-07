@@ -93,16 +93,21 @@ class TestGraderComputeGrade:
         grade = self.grader._compute_grade(90, reviews, [])
         assert grade != "A+"
 
-    def test_score_90_with_all_reviewers_passing_is_a_plus(self, bull_m1, bull_m5, bull_m15):
-        """When score >= 90 AND per-reviewer requirements met → A+."""
-        # Use the full grader with strong bull data
-        report = self.grader.grade(
-            bull_m1, bull_m5, bull_m15,
-            direction="LONG",
-            extra={"utc_hour": 14, "minutes_to_news": 999, "spread": 1.0, "rr": 3.0},
-        )
-        # The grade must be deterministic and within valid set
-        assert report.grade in GRADE_ORDER
+    def test_score_90_with_all_reviewers_passing_is_a_plus_via_meets_check(self):
+        """_meets_a_plus_requirements returns True when all minimums are satisfied."""
+        g = GradeThresholds()
+        reviews = [
+            ReviewResult("Trend",      score=g.a_plus_trend_min,      max_score=25, passed=True),
+            ReviewResult("Momentum",   score=g.a_plus_momentum_min,   max_score=20, passed=True),
+            ReviewResult("Volatility", score=g.a_plus_volatility_min, max_score=15, passed=True),
+            ReviewResult("Execution",  score=g.a_plus_execution_min,  max_score=15, passed=True),
+            ReviewResult("Risk",       score=g.a_plus_risk_min,       max_score=15, passed=True),
+            ReviewResult("Session",    score=g.a_plus_session_min,    max_score=10, passed=True),
+        ]
+        assert self.grader._meets_a_plus_requirements(95, reviews) is True
+        # And therefore _compute_grade must return A+
+        grade = self.grader._compute_grade(95, reviews, [])
+        assert grade == "A+"
 
     def test_a_plus_is_not_impossible(self, bull_m1, bull_m5, bull_m15):
         """A+ must remain achievable — verify grade set includes A+."""

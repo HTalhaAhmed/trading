@@ -211,12 +211,10 @@ class Scanner:
         else:
             m1_bull_trigger = None
 
-        # Combine
+        # Combine — M1 trigger direction is advisory; HTF + M5 alignment drives the call.
+        # A bearish M1 dip into the value area is still a long entry candidate.
         if m15_bull and m5_bull and rsi_5 > cfg.rsi_bull_min:
-            if m1_bull_trigger is not False:
-                direction = "LONG"
-            else:
-                direction = "LONG"   # still long — M1 dip can be entry
+            direction = "LONG"
         elif m15_bear and m5_bear and rsi_5 < cfg.rsi_bear_max:
             direction = "SHORT"
         else:

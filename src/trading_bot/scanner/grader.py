@@ -193,13 +193,18 @@ class Grader:
 
         reviewer_map = {r.reviewer_name: r for r in reviews}
 
+        # If any expected reviewer is missing entirely, A+ cannot be awarded
+        expected = ["Trend", "Momentum", "Volatility", "Execution", "Risk", "Session"]
+        if not all(name in reviewer_map for name in expected):
+            return False
+
         checks = [
-            reviewer_map.get("Trend", ReviewResult("Trend")).score >= g.a_plus_trend_min,
-            reviewer_map.get("Momentum", ReviewResult("Momentum")).score >= g.a_plus_momentum_min,
-            reviewer_map.get("Volatility", ReviewResult("Volatility")).score >= g.a_plus_volatility_min,
-            reviewer_map.get("Execution", ReviewResult("Execution")).score >= g.a_plus_execution_min,
-            reviewer_map.get("Risk", ReviewResult("Risk")).score >= g.a_plus_risk_min,
-            reviewer_map.get("Session", ReviewResult("Session")).score >= g.a_plus_session_min,
+            reviewer_map["Trend"].score >= g.a_plus_trend_min,
+            reviewer_map["Momentum"].score >= g.a_plus_momentum_min,
+            reviewer_map["Volatility"].score >= g.a_plus_volatility_min,
+            reviewer_map["Execution"].score >= g.a_plus_execution_min,
+            reviewer_map["Risk"].score >= g.a_plus_risk_min,
+            reviewer_map["Session"].score >= g.a_plus_session_min,
         ]
 
         reviewers_passing = sum(r.passed for r in reviews)

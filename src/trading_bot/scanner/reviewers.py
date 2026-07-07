@@ -486,11 +486,17 @@ class ExecutionReviewer(_BaseReviewer):
                 room_r = 2.0
                 res.cautions.append("Room to target estimated (no explicit target provided)")
 
+        # Partial credit scale: 0–4 points proportional to how close room_r is to minimum.
+        _MAX_PARTIAL_ROOM_CREDIT = 4
         if room_r >= cfg.min_room_to_target_r:
             score += 5
             res.reasons.append(f"Room to target {room_r:.1f}R — strong potential")
         elif room_r >= cfg.hard_block_room_r:
-            ratio_score = int(4 * (room_r - cfg.hard_block_room_r) / (cfg.min_room_to_target_r - cfg.hard_block_room_r))
+            ratio_score = int(
+                _MAX_PARTIAL_ROOM_CREDIT
+                * (room_r - cfg.hard_block_room_r)
+                / (cfg.min_room_to_target_r - cfg.hard_block_room_r)
+            )
             score += max(0, ratio_score)
             res.cautions.append(f"Room to target {room_r:.1f}R — below ideal {cfg.min_room_to_target_r:.1f}R")
         else:

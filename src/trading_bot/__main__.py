@@ -115,6 +115,11 @@ def _render(result: ScanResult, fmt: str) -> str:
 # Synthetic demo data for --mode scan without live MT5
 # ---------------------------------------------------------------------------
 
+_DEMO_BASE_PRICE = 2000.0
+_DEMO_DRIFT = 0.3        # pts per bar — slight upward trend
+_DEMO_VOLATILITY = 3.0   # std-dev of per-bar moves
+
+
 def _make_demo_data(n_bars: int = 1500, seed: int = 42):
     """
     Generate synthetic trending OHLCV data for offline scanning.
@@ -123,8 +128,7 @@ def _make_demo_data(n_bars: int = 1500, seed: int = 42):
     connected. In MT5/paper mode the real bar data is supplied externally.
     """
     rng = np.random.default_rng(seed)
-    base = 2000.0
-    closes = base + np.cumsum(rng.normal(0.3, 3.0, n_bars))  # slight upward drift
+    closes = _DEMO_BASE_PRICE + np.cumsum(rng.normal(_DEMO_DRIFT, _DEMO_VOLATILITY, n_bars))
     opens  = closes - rng.normal(0, 1.5, n_bars)
     highs  = np.maximum(opens, closes) + rng.uniform(0.5, 3.0, n_bars)
     lows   = np.minimum(opens, closes) - rng.uniform(0.5, 3.0, n_bars)
