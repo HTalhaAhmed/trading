@@ -1,0 +1,28 @@
+broker:
+  mode: mt5
+  trade_enabled: false
+  polling_interval_seconds: 5
+  # IMPORTANT: Use exact broker symbol names (may include suffixes like .a, m, .pro)
+  watchlist:
+    - XAUUSD
+    - EURUSD
+    - GBPUSD
+    - USDJPY
+    - XAGUSD
+
+risk_limits:
+  max_trades_per_symbol_per_day: 5
+  max_trades_total_per_day: 8
+  max_trades_per_session: 2
+  min_minutes_between_trades: 20
+  max_open_positions_per_symbol: 1
+  max_open_positions_total: 2
+
+scanner:
+  only_a_plus: true
+  top_n_setups: 3
+  require_trending_market_first: true
+  a_plus_min_score: 0.85
+  a_min_score: 0.70
+  b_min_score: 0.55
+  c_min_score: 0.40
